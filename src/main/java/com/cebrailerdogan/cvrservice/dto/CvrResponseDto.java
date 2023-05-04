@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public record CvrResponseDto(
-        int vat,
+        long vat,
         String name,
         String address,
         @JsonProperty("zipcode")
