@@ -25,7 +25,7 @@ public class CompanyLocalService implements CompanyService {
         }
 
         if(Optional.ofNullable(search).isPresent()){
-            Optional<Company> company = repository.findByVat(vat); // todo
+            Optional<Company> company = repository.findByVat(vat); // todo create a sql that joins and compares fields
             if(company.isPresent()){
                 return company;
             }
