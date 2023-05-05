@@ -2,8 +2,8 @@ package com.cebrailerdogan.cvrservice.controller;
 
 import com.cebrailerdogan.cvrservice.domain.Company;
 import com.cebrailerdogan.cvrservice.dto.CvrResponseDto;
-import com.cebrailerdogan.cvrservice.service.CompanyLocalService;
-import com.cebrailerdogan.cvrservice.service.CompanyLookupService;
+import com.cebrailerdogan.cvrservice.service.CompanyLocalLookupService;
+import com.cebrailerdogan.cvrservice.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CvrController {
 
-    private final CompanyLookupService companyLookupService;
-    private final CompanyLocalService companyLocalService;
+    private final CompanyService companyService;
+    private final CompanyLocalLookupService companyLocalService;
 
 
     @GetMapping
@@ -29,7 +29,7 @@ public class CvrController {
                                        @RequestParam String country,
                                        @RequestParam(required = false) Long vat,
                                        @RequestParam(required = false) String name) {
-        return ResponseEntity.ok().body(companyLookupService.getCvrData(search, country, vat, name));
+        return ResponseEntity.ok().body(companyService.getCvrData(search, country, vat, name));
     }
 
     @GetMapping("cached")

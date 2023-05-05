@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CompanyLocalService implements CompanyService {
+public class CompanyLocalLookupService implements CompanyLookupService {
 
     private final CompanyRepository repository;
 

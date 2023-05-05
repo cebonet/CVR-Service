@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CompanyRegistryService implements CompanyService {
+public class CompanyRegistryLookupService implements CompanyLookupService {
 
     private final RestTemplate restTemplate;
 
@@ -40,6 +40,31 @@ public class CompanyRegistryService implements CompanyService {
             throw new MissingRequiredParametersException("Both search and country parameters are required");
         }
 
+        Map<String, String> allParameters = buildQueryParametersForCall(search, country, vat, name);
+        UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(GET_CVR_DATA_URL);
+        allParameters.forEach((key, value) -> uriBuilder.queryParam(key, value));
+
+
+        ResponseEntity<CvrRegistryResponseDto> response = null;
+        try{
+            response = restTemplate.exchange(uriBuilder.build().toString(),
+                    HttpMethod.GET,
+                    HttpEntity.EMPTY,
+                    CvrRegistryResponseDto.class);
+
+        } catch (HttpClientErrorException errorException){
+            if (errorException.getStatusCode() == HttpStatusCode.valueOf(404)){
+                throw new CompanyNotFoundException("Company not found in register");
+            }
+        }
+
+        Company fetchedCompany = objectMapper.convertValue(response.getBody(), Company.class);
+        fetchedCompany.getProductionUnits().forEach(productionUnit -> productionUnit.setVat(fetchedCompany));
+        companyRepository.save(fetchedCompany);
+        return Optional.ofNullable(fetchedCompany);
+    }
+
+    private Map<String, String> buildQueryParametersForCall(String search, String country, Long vat, String name) {
         Map<String, String> requiredParameters = new HashMap<>();
         requiredParameters.putAll(Map.of("search", search, "country", country));
         Map<String, String> searchParameters = new HashMap<>();
@@ -63,28 +88,7 @@ public class CompanyRegistryService implements CompanyService {
         Map<String, String> allParameters = new HashMap<>();
         allParameters.putAll(requiredParameters);
         allParameters.putAll(searchParameters);
-
-        UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(GET_CVR_DATA_URL);
-        allParameters.forEach((key, value) -> uriBuilder.queryParam(key, value));
-
-
-        ResponseEntity<CvrRegistryResponseDto> response = null;
-        try{
-            response = restTemplate.exchange(uriBuilder.build().toString(),
-                    HttpMethod.GET,
-                    HttpEntity.EMPTY,
-                    CvrRegistryResponseDto.class);
-
-        } catch (HttpClientErrorException errorException){
-            if (errorException.getStatusCode() == HttpStatusCode.valueOf(404)){
-                throw new CompanyNotFoundException("Company not found in register");
-            }
-        }
-
-        Company fetchedCompany = objectMapper.convertValue(response.getBody(), Company.class);
-        fetchedCompany.getProductionUnits().forEach(productionUnit -> productionUnit.setVat(fetchedCompany));
-        companyRepository.save(fetchedCompany);
-        return Optional.ofNullable(fetchedCompany);
+        return allParameters;
     }
 
 }
