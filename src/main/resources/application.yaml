@@ -1,8 +1,8 @@
 spring:
   datasource:
     platform: postgres
-    url: jdbc:postgresql://esekyuku:49153/cvr-db
-    username: user
+    url: jdbc:postgresql://localhost:15432/cvr-db
+    username: username
     password: password
     driverClassName: org.postgresql.Driver
   jpa:
