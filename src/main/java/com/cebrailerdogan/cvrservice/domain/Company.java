@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public final class Company {
+
     @Id
     private long vat;
     private String name;

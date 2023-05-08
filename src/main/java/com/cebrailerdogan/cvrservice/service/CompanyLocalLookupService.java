@@ -25,7 +25,7 @@ public class CompanyLocalLookupService implements CompanyLookupService {
         }
 
         if(Optional.ofNullable(search).isPresent()){
-            Optional<Company> company = repository.findByVat(vat); // todo create a sql that joins and compares fields
+            Optional<Company> company = repository.findByVatOrNameOrProductionUnit(search);
             if(company.isPresent()){
                 return company;
             }

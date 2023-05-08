@@ -32,28 +32,27 @@ public class CompanyRegistryLookupService implements CompanyLookupService {
 
     private final CompanyRepository companyRepository;
 
-    private final String GET_CVR_DATA_URL = "https://cvrapi.dk/api";
+    private static final String CVR_API_URL = "https://cvrapi.dk/api";
 
     public Optional<Company> getCvrData(String search, String country, Long vat, String name) {
 
-        if(Optional.ofNullable(search).isEmpty() || Optional.ofNullable(country).isEmpty()){
+        if (Optional.ofNullable(search).isEmpty() || Optional.ofNullable(country).isEmpty()) {
             throw new MissingRequiredParametersException("Both search and country parameters are required");
         }
 
         Map<String, String> allParameters = buildQueryParametersForCall(search, country, vat, name);
-        UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(GET_CVR_DATA_URL);
-        allParameters.forEach((key, value) -> uriBuilder.queryParam(key, value));
-
+        UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(CVR_API_URL);
+        allParameters.forEach(uriBuilder::queryParam);
 
         ResponseEntity<CvrRegistryResponseDto> response = null;
-        try{
+        try {
             response = restTemplate.exchange(uriBuilder.build().toString(),
                     HttpMethod.GET,
                     HttpEntity.EMPTY,
                     CvrRegistryResponseDto.class);
 
-        } catch (HttpClientErrorException errorException){
-            if (errorException.getStatusCode() == HttpStatusCode.valueOf(404)){
+        } catch (HttpClientErrorException errorException) {
+            if (errorException.getStatusCode() == HttpStatusCode.valueOf(404)) {
                 throw new CompanyNotFoundException("Company not found in register");
             }
         }
@@ -61,27 +60,21 @@ public class CompanyRegistryLookupService implements CompanyLookupService {
         Company fetchedCompany = objectMapper.convertValue(response.getBody(), Company.class);
         fetchedCompany.getProductionUnits().forEach(productionUnit -> productionUnit.setVat(fetchedCompany));
         companyRepository.save(fetchedCompany);
-        return Optional.ofNullable(fetchedCompany);
+        return Optional.of(fetchedCompany);
     }
 
     private Map<String, String> buildQueryParametersForCall(String search, String country, Long vat, String name) {
-        Map<String, String> requiredParameters = new HashMap<>();
-        requiredParameters.putAll(Map.of("search", search, "country", country));
+        Map<String, String> requiredParameters = new HashMap<>(Map.of("search", search, "country", country));
         Map<String, String> searchParameters = new HashMap<>();
 
-        if(Optional.ofNullable(vat).isPresent()){
-            searchParameters.put("vat", String.valueOf(vat));
-        }
+        Optional.ofNullable(vat).ifPresent(v -> searchParameters.put("vat", String.valueOf(v)));
+        Optional.ofNullable(name).ifPresent(n -> searchParameters.put("name", name));
 
-        if(Optional.ofNullable(name).isPresent()){
-            searchParameters.put("name", name);
-        }
-
-        if(!searchParameters.isEmpty()){
+        if (!searchParameters.isEmpty()) {
             requiredParameters.remove("search");
         }
 
-        if(searchParameters.size() > 1){
+        if (searchParameters.size() > 1) {
             throw new OnlyOneSearchParameterAllowedException("Only one search parameter is accepted");
         }
 
