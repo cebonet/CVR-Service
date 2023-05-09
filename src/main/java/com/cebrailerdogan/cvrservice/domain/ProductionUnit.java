@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
@@ -15,11 +14,10 @@ public class ProductionUnit {
 
     @Id
     Long pno;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "vat_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "company")
     @JsonIgnore
-    @EqualsAndHashCode.Exclude
-    private Company vat;
+    private Company company;
     private boolean main;
     private String name;
     private String address;

@@ -1,11 +1,11 @@
 package com.cebrailerdogan.cvrservice.service;
 
+import com.cebrailerdogan.cvrservice.dao.CompanyDao;
 import com.cebrailerdogan.cvrservice.domain.Company;
 import com.cebrailerdogan.cvrservice.dto.registry.CompanyRegistryResponseDto;
 import com.cebrailerdogan.cvrservice.exception.CompanyNotFoundException;
 import com.cebrailerdogan.cvrservice.exception.MissingRequiredParametersException;
 import com.cebrailerdogan.cvrservice.exception.OnlyOneSearchParameterAllowedException;
-import com.cebrailerdogan.cvrservice.repository.CompanyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -30,7 +30,7 @@ public class CompanyRegistryLookupService implements CompanyLookupService {
 
     private final ObjectMapper objectMapper;
 
-    private final CompanyRepository companyRepository;
+    private final CompanyDao companyDao;
 
     private static final String CVR_API_URL = "https://cvrapi.dk/api";
 
@@ -58,8 +58,7 @@ public class CompanyRegistryLookupService implements CompanyLookupService {
         }
 
         Company fetchedCompany = objectMapper.convertValue(response.getBody(), Company.class);
-        fetchedCompany.getProductionUnits().forEach(productionUnit -> productionUnit.setVat(fetchedCompany));
-        companyRepository.save(fetchedCompany);
+        companyDao.save(fetchedCompany);
         return Optional.of(fetchedCompany);
     }
 

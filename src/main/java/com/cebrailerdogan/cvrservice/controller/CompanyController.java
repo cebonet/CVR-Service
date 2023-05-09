@@ -4,6 +4,7 @@ import com.cebrailerdogan.cvrservice.domain.Company;
 import com.cebrailerdogan.cvrservice.dto.CompanyResponseDto;
 import com.cebrailerdogan.cvrservice.service.CompanyLocalLookupService;
 import com.cebrailerdogan.cvrservice.service.CompanyService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/cvr")
 @RequiredArgsConstructor
-public class CvrController {
+public class CompanyController {
 
     private final CompanyService companyService;
     private final CompanyLocalLookupService companyLocalService;
@@ -27,8 +28,8 @@ public class CvrController {
     @GetMapping
     ResponseEntity<CompanyResponseDto> getCvrData(@RequestParam String search,
                                                   @RequestParam String country,
-                                                  @RequestParam(required = false) Long vat,
-                                                  @RequestParam(required = false) String name) {
+                                                  @Parameter(description = "Specifically search for vat - overrides search value") @RequestParam(required = false) Long vat,
+                                                  @Parameter(description = "Specifically search for name - overrides search value") @RequestParam(required = false) String name) {
         return ResponseEntity.ok().body(companyService.getCvrData(search, country, vat, name));
     }
 

@@ -36,6 +36,6 @@ public class CompanyResponseDto {
     private String creditStartDate;
     private String creditBankrupt;
     private String creditStatus;
-    private String owners;
+    private List<OwnerResponseDto> owners;
     private List<ProductionUnitResponseDto> productionUnits;
 }

@@ -19,7 +19,6 @@ public class CompanyService {
     private final ObjectMapper objectMapper;
 
     public CompanyResponseDto getCvrData(String search, String country, Long vat, String name){
-
         Optional<Company> companyFromDatabase = companyLocalService.getCvrData(search, country, vat, name);
 
         if (companyFromDatabase.isPresent()) {

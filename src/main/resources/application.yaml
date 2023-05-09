@@ -20,3 +20,4 @@ server:
 logging:
   level:
     com.cebrailerdogan.cvrservice: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG

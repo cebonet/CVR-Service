@@ -1,6 +1,7 @@
 package com.cebrailerdogan.cvrservice.dto.registry;
 
 import com.cebrailerdogan.cvrservice.dto.ProductionUnitResponseDto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CompanyRegistryResponseDto {
         private long vat;
         private String name;
@@ -37,7 +39,7 @@ public class CompanyRegistryResponseDto {
         private String creditStartDate;
         private String creditBankrupt;
         private String creditStatus;
-        private String owners;
+        private List<OwnerRegistryResponseDto> owners;
         private List<ProductionUnitResponseDto> productionUnits;
 }
 
