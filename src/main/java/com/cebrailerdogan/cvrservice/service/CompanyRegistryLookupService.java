@@ -1,7 +1,7 @@
 package com.cebrailerdogan.cvrservice.service;
 
 import com.cebrailerdogan.cvrservice.domain.Company;
-import com.cebrailerdogan.cvrservice.dto.CvrRegistryResponseDto;
+import com.cebrailerdogan.cvrservice.dto.registry.CompanyRegistryResponseDto;
 import com.cebrailerdogan.cvrservice.exception.CompanyNotFoundException;
 import com.cebrailerdogan.cvrservice.exception.MissingRequiredParametersException;
 import com.cebrailerdogan.cvrservice.exception.OnlyOneSearchParameterAllowedException;
@@ -44,12 +44,12 @@ public class CompanyRegistryLookupService implements CompanyLookupService {
         UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(CVR_API_URL);
         allParameters.forEach(uriBuilder::queryParam);
 
-        ResponseEntity<CvrRegistryResponseDto> response = null;
+        ResponseEntity<CompanyRegistryResponseDto> response = null;
         try {
             response = restTemplate.exchange(uriBuilder.build().toString(),
                     HttpMethod.GET,
                     HttpEntity.EMPTY,
-                    CvrRegistryResponseDto.class);
+                    CompanyRegistryResponseDto.class);
 
         } catch (HttpClientErrorException errorException) {
             if (errorException.getStatusCode() == HttpStatusCode.valueOf(404)) {

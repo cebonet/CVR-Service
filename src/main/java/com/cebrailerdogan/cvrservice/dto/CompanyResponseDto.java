@@ -1,28 +1,26 @@
-package com.cebrailerdogan.cvrservice.domain;
+package com.cebrailerdogan.cvrservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCaseStrategy.class)
-public final class Company {
-
-    @Id
+public class CompanyResponseDto {
     private long vat;
     private String name;
     private String address;
     private String zipCode;
     private String city;
     private String cityName;
+    @JsonProperty("protected")
     private boolean _protected;
     private String phone;
     private String email;
@@ -39,6 +37,5 @@ public final class Company {
     private String creditBankrupt;
     private String creditStatus;
     private String owners;
-    @OneToMany(mappedBy = "vat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Set<ProductionUnit> productionUnits;
+    private List<ProductionUnitResponseDto> productionUnits;
 }

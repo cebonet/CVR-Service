@@ -1,7 +1,7 @@
 package com.cebrailerdogan.cvrservice.controller;
 
 import com.cebrailerdogan.cvrservice.domain.Company;
-import com.cebrailerdogan.cvrservice.dto.CvrResponseDto;
+import com.cebrailerdogan.cvrservice.dto.CompanyResponseDto;
 import com.cebrailerdogan.cvrservice.service.CompanyLocalLookupService;
 import com.cebrailerdogan.cvrservice.service.CompanyService;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,10 @@ public class CvrController {
 
 
     @GetMapping
-    ResponseEntity<CvrResponseDto> getCvrData(@RequestParam String search,
-                                       @RequestParam String country,
-                                       @RequestParam(required = false) Long vat,
-                                       @RequestParam(required = false) String name) {
+    ResponseEntity<CompanyResponseDto> getCvrData(@RequestParam String search,
+                                                  @RequestParam String country,
+                                                  @RequestParam(required = false) Long vat,
+                                                  @RequestParam(required = false) String name) {
         return ResponseEntity.ok().body(companyService.getCvrData(search, country, vat, name));
     }
 

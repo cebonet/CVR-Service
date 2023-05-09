@@ -1,7 +1,7 @@
 package com.cebrailerdogan.cvrservice.service;
 
 import com.cebrailerdogan.cvrservice.domain.Company;
-import com.cebrailerdogan.cvrservice.dto.CvrResponseDto;
+import com.cebrailerdogan.cvrservice.dto.CompanyResponseDto;
 import com.cebrailerdogan.cvrservice.exception.CompanyNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,18 +18,19 @@ public class CompanyService {
     private final CompanyLocalLookupService companyLocalService;
     private final ObjectMapper objectMapper;
 
-    public CvrResponseDto getCvrData(String search, String country, Long vat, String name){
+    public CompanyResponseDto getCvrData(String search, String country, Long vat, String name){
 
         Optional<Company> companyFromDatabase = companyLocalService.getCvrData(search, country, vat, name);
 
         if (companyFromDatabase.isPresent()) {
-            log.info("Entry found in cache");
-            return objectMapper.convertValue(companyFromDatabase.get(), CvrResponseDto.class);
+            log.debug("Entry found in cache");
+            return objectMapper.convertValue(companyFromDatabase.get(), CompanyResponseDto.class);
         }
 
+        log.debug("Calling registry for data");
         Optional<Company> companyFromRegistry = companyRegistryService.getCvrData(search, country, vat, name);
         return companyFromRegistry
-                .map(company -> objectMapper.convertValue(company, CvrResponseDto.class))
+                .map(company -> objectMapper.convertValue(company, CompanyResponseDto.class))
                 .orElseThrow(CompanyNotFoundException::new);
     }
 }

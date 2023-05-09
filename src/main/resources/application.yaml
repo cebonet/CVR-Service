@@ -17,3 +17,6 @@ spring:
 server:
   error:
     include-message: always
+logging:
+  level:
+    com.cebrailerdogan.cvrservice: DEBUG
