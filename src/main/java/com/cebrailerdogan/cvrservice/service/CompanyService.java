@@ -6,6 +6,7 @@ import com.cebrailerdogan.cvrservice.exception.CompanyNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class CompanyService {
     private final CompanyLocalLookupService companyLocalService;
     private final ObjectMapper objectMapper;
 
+    @Cacheable(value = "company")
     public CompanyResponseDto getCvrData(String search, String country, Long vat, String name){
         Optional<Company> companyFromDatabase = companyLocalService.getCvrData(search, country, vat, name);
 

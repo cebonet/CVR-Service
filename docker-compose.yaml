@@ -1,0 +1,44 @@
+version: "3"
+services:
+  postgresql:
+    container_name: postgresql
+    image: 'postgres:latest'
+    ports:
+      - 15432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - postgres-network
+    environment:
+      POSTGRES_USER: username # The PostgreSQL user (useful to connect to the database)
+      POSTGRES_PASSWORD: password # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_DB: default_database # The PostgreSQL default database (automatically created at first launch)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - 15433:80
+    depends_on:
+      - postgresql
+    networks:
+      - postgres-network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin/
+    environment:
+      PGADMIN_DEFAULT_EMAIL: cebrail@local.net # The PostgreSQL user (useful to connect to the database)
+      PGADMIN_DEFAULT_PASSWORD: password # The PostgreSQL password (useful to connect to the database)
+  redis:
+    image: redis:7.0.11
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - cache:/data
+networks:
+  postgres-network:
+    driver: bridge
+volumes:
+  cache:
+  db-data:
+  pgadmin-data:

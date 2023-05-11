@@ -7,13 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCaseStrategy.class)
-public class CompanyResponseDto {
+public class CompanyResponseDto implements Serializable {
     private long vat;
     private String name;
     private String address;

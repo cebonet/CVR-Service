@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-@ActiveProfiles("postgres")
+    @ActiveProfiles("postgres")
 @Import(CompanyDao.class)
 class CompanyRepositoryTest {
 

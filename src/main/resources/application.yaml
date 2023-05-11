@@ -1,4 +1,8 @@
 spring:
+  cache:
+    type: redis
+    host: localhost
+    port: 6379
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:15432/cvr-db
@@ -20,4 +24,4 @@ server:
 logging:
   level:
     com.cebrailerdogan.cvrservice: DEBUG
-    org.springframework.web.client.RestTemplate: DEBUG
+    org.springframework.web.client.RestTemplate: INFO
